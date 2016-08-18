@@ -587,3 +587,29 @@ Plot_Normal_Distribution <- function(mu,sigma,x_min,x_max,num_points)
   df_norm_plot <- data.frame(x_norm_dist=x_values,y_norm_dist=y_values)
   return(df_norm_plot)
 }
+
+## HMM_Calculate_Lifetime_Likelihood(t_m,tau,n)
+## calculates the likelihood of observing a mean value (t_m) for
+## the lifetime of n exponentially distributed random variables,
+## when the true underlying lifetime is tau 
+## sum of n exponentially distributed RVs is Erlang-distributed,
+## tiny parameter transformation leads to tbe implemented Likelihood function
+HMM_Calculate_Lifetime_Likelihood <- function(t_m,tau,n)
+{
+  factor1 <- (1.0/tau)^n
+  factor2 <- (n*t_m)^(n-1)
+  factor3 <- exp(-(n*t_m)/tau)
+  factor4 <- gamma(n)
+  lik <- n*factor1*factor2*factor3/factor4;
+  return(lik)
+}
+
+## HMM_Calculate_Lifetime_LogLikelihood(t_m,tau,n)
+## calculates the log likelihood for the mean value (t_m)
+## out of n exponentially distributed RVs with underlying 
+## lifetime tau, see description above
+HMM_Calculate_Lifetime_LogLikelihood <- function(t_m,tau,n)
+{
+  log_lik <- log(n) - n*log(tau)+(n-1)*log(n*t_m)-n*t_m/tau - lgamma(n)
+  return(log_lik)
+}
